@@ -1,54 +1,57 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Room {{ room.code }} · Puzzle Party{% endblock %}
 
 {% block content %}
 <section class="card">
-  <p class="muted">Room</p>
-  <h1 class="room-code">{{ room.code }}</h1>
+  <div class="room-header">
+    <div>
+      <p class="muted">Room</p>
+      <h1 class="room-code">{{ room.code }}</h1>
+    </div>
+    <span id="connection-status" class="status status-connecting">Connecting…</span>
+  </div>
   <div class="share-row">
     <input id="room-link" class="input" value="{{ share_url }}" readonly>
     <button id="copy-link" type="button" class="btn">Copy</button>
   </div>
+  <ul id="player-list" class="player-list"></ul>
 </section>
 
-<h2 class="section-title">Players ({{ players|length }})</h2>
-<ul class="player-list">
-  {% for player in players %}
-    <li class="player{% if player.pk == me.pk %} is-me{% endif %}">{{ player.nickname }}</li>
-  {% endfor %}
-</ul>
+<section id="lobby-view">
+  <h2 class="section-title">Choose a game</h2>
+  <div class="game-grid">
+    {% for game in games %}
+      <button type="button" class="game-card" data-game-type="{{ game.game_type }}">
+        <span class="game-emoji">{{ game.emoji }}</span>
+        <span class="game-name">{{ game.name }}</span>
+        <span class="muted">{{ game.description }}</span>
+      </button>
+    {% empty %}
+      <p class="muted">No games installed yet.</p>
+    {% endfor %}
+  </div>
+</section>
 
-<h2 class="section-title">Choose a game</h2>
-<div class="game-grid">
-  <button class="game-card" disabled>
-    <span class="game-emoji">🎬</span>
-    <span class="game-name">Guess the Movie</span>
-    <span class="muted">Coming soon</span>
-  </button>
-  <button class="game-card" disabled>
-    <span class="game-emoji">✏️</span>
-    <span class="game-name">Mini Crossword</span>
-    <span class="muted">Coming soon</span>
-  </button>
-  <button class="game-card" disabled>
-    <span class="game-emoji">🌍</span>
-    <span class="game-name">Guess the Country</span>
-    <span class="muted">Coming soon</span>
-  </button>
-</div>
+<section id="game-view" hidden>
+  <div class="game-toolbar">
+    <button type="button" id="back-to-lobby" class="btn btn-small">← Games</button>
+    <h2 id="game-title" class="game-title"></h2>
+    <button type="button" id="new-round" class="btn btn-small">New round</button>
+  </div>
+  <p id="game-solved" class="solved-banner" hidden>Solved together! 🎉</p>
+  <div id="game-root"></div>
+</section>
+
+<p id="room-error" class="toast" hidden></p>
+
+{{ room_config|json_script:"room-config" }}
 {% endblock %}
 
 {% block scripts %}
-<script>
-  document.getElementById("copy-link").addEventListener("click", async (event) => {
-    const input = document.getElementById("room-link");
-    try {
-      await navigator.clipboard.writeText(input.value);
-      event.target.textContent = "Copied!";
-    } catch {
-      input.select();
-    }
-  });
-</script>
+<script src="{% static 'js/room.js' %}"></script>
+{% for game in games %}
+  <script src="{% static game.client_script %}"></script>
+{% endfor %}
 {% endblock %}

@@ -4,6 +4,7 @@ from django.views.decorators.http import require_POST
 from . import services
 from .forms import JoinRoomForm, NicknameForm
 from .models import Room
+from games.core.registry import all_games
 
 SESSION_NICKNAME = "nickname"
 
@@ -55,8 +56,8 @@ def room_detail(request, code):
     me = services.join_room(room, _ensure_session_key(request), nickname)
     context = {
         "room": room,
-        "me": me,
-        "players": room.players.order_by("joined_at"),
         "share_url": request.build_absolute_uri(),
+        "games": all_games(),
+        "room_config": {"code": room.code, "me": me.pk},
     }
     return render(request, "rooms/lobby.html", context)

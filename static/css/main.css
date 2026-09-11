@@ -110,3 +110,45 @@ body {
 .game-card:disabled { opacity: 0.55; cursor: not-allowed; }
 .game-emoji { font-size: 2rem; }
 .game-name { font-weight: 700; }
+
+[hidden] { display: none !important; }
+
+.room-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+
+.status { font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.status-live { background: #dcfce7; color: #166534; }
+.status-connecting { background: #fef3c7; color: #92400e; }
+
+.game-card:hover:not(:disabled) { border-color: var(--primary); }
+
+.game-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 24px 0 16px; }
+.game-title { margin: 0; font-size: 1.2rem; text-align: center; }
+.btn-small { padding: 8px 12px; font-size: 0.9rem; }
+
+.solved-banner {
+  margin: 0 0 16px;
+  padding: 12px;
+  text-align: center;
+  font-weight: 700;
+  color: #166534;
+  background: #dcfce7;
+  border: 2px solid #86efac;
+  border-radius: 12px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 10px 16px;
+  background: var(--text);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* Demo igra: briše se zajedno s games/demo */
+.demo { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.demo-count { font-size: 4rem; font-weight: 800; }

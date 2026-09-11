@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rooms",
+    "games.core",
+    "games.demo",
 ]
 
 MIDDLEWARE = [
@@ -126,4 +129,12 @@ MAILERS = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
+}
+
+ASGI_APPLICATION = "config.asgi.application"
+
+# Channel layer je "pošta" između WebSocket konekcija (tko je u kojoj sobi).
+# In-memory radi unutar jednog procesa. Za više procesa kasnije ide Redis.
+CHANNEL_LAYERS = {
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"},
 }
