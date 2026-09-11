@@ -26,7 +26,17 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+
+CSRF_TRUSTED_ORIGINS = [
+    origin
+    for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin
+]
+
+# Tunnel prima HTTPS i prosljeđuje Djangu kao HTTP. Ovaj header mu
+# javlja da je originalni zahtjev bio HTTPS, pa share link bude https://.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition
@@ -42,6 +52,7 @@ INSTALLED_APPS = [
     "rooms",
     "games.core",
     "games.demo",
+    "games.movie",
 ]
 
 MIDDLEWARE = [
@@ -138,3 +149,5 @@ ASGI_APPLICATION = "config.asgi.application"
 CHANNEL_LAYERS = {
     "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"},
 }
+
+TMDB_READ_TOKEN = os.environ.get("TMDB_READ_TOKEN", "")
