@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Join {{ room.code }} · Puzzle Party{% endblock %}
+
+{% block content %}
+<form method="post" class="card narrow">
+  {% csrf_token %}
+  <p class="muted">Joining room</p>
+  <h1 class="room-code">{{ room.code }}</h1>
+  <label for="id_nickname">Your nickname</label>
+  <input id="id_nickname" name="nickname" class="input" maxlength="24"
+         value="{{ form.nickname.value|default:'' }}" autofocus required>
+  {% for error in form.nickname.errors %}
+    <p class="error">{{ error }}</p>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">Join</button>
+</form>
+{% endblock %}

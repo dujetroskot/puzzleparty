@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Room {{ room.code }} · Puzzle Party{% endblock %}
+
+{% block content %}
+<section class="card">
+  <p class="muted">Room</p>
+  <h1 class="room-code">{{ room.code }}</h1>
+  <div class="share-row">
+    <input id="room-link" class="input" value="{{ share_url }}" readonly>
+    <button id="copy-link" type="button" class="btn">Copy</button>
+  </div>
+</section>
+
+<h2 class="section-title">Players ({{ players|length }})</h2>
+<ul class="player-list">
+  {% for player in players %}
+    <li class="player{% if player.pk == me.pk %} is-me{% endif %}">{{ player.nickname }}</li>
+  {% endfor %}
+</ul>
+
+<h2 class="section-title">Choose a game</h2>
+<div class="game-grid">
+  <button class="game-card" disabled>
+    <span class="game-emoji">🎬</span>
+    <span class="game-name">Guess the Movie</span>
+    <span class="muted">Coming soon</span>
+  </button>
+  <button class="game-card" disabled>
+    <span class="game-emoji">✏️</span>
+    <span class="game-name">Mini Crossword</span>
+    <span class="muted">Coming soon</span>
+  </button>
+  <button class="game-card" disabled>
+    <span class="game-emoji">🌍</span>
+    <span class="game-name">Guess the Country</span>
+    <span class="muted">Coming soon</span>
+  </button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.getElementById("copy-link").addEventListener("click", async (event) => {
+    const input = document.getElementById("room-link");
+    try {
+      await navigator.clipboard.writeText(input.value);
+      event.target.textContent = "Copied!";
+    } catch {
+      input.select();
+    }
+  });
+</script>
+{% endblock %}

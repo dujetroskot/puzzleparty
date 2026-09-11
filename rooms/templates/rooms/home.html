@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <h1>Puzzle Party</h1>
+  <p class="muted">Solve small puzzles together. No accounts, no scores.</p>
+</section>
+
+<div class="card-grid">
+  <form method="post" action="{% url 'rooms:create' %}" class="card">
+    {% csrf_token %}
+    <h2>New room</h2>
+    <p class="muted">Create a room and send the link to your friends.</p>
+    <button type="submit" class="btn btn-primary">Create Room</button>
+  </form>
+
+  <form method="post" action="{% url 'rooms:join' %}" class="card">
+    {% csrf_token %}
+    <h2>Join a room</h2>
+    <input name="code" class="input input-code" placeholder="ABCD"
+           maxlength="8" autocomplete="off"
+           value="{{ join_form.code.value|default:'' }}">
+    {% for error in join_form.code.errors %}
+      <p class="error">{{ error }}</p>
+    {% endfor %}
+    <button type="submit" class="btn">Join Room</button>
+  </form>
+</div>
+{% endblock %}
