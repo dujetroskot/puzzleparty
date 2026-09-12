@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "games.core",
     "games.demo",
     "games.movie",
+    "games.country",
 ]
 
 MIDDLEWARE = [

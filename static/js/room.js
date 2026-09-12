@@ -42,6 +42,40 @@
     errorTimer = setTimeout(() => { el.hidden = true; }, 3000);
   }
 
+  // Zamjena za confirm(): vrati Promise koji se riješi s true/false.
+  // Za razliku od confirm(), ne blokira JS, pa state i dalje stiže dok je otvoren.
+  function confirmDialog(message, okLabel = "Confirm") {
+    return new Promise((resolve) => {
+      const modal = $("modal");
+      $("modal-text").textContent = message;
+      $("modal-ok").textContent = okLabel;
+      modal.hidden = false;
+
+      const close = (answer) => {
+        modal.hidden = true;
+        $("modal-ok").removeEventListener("click", onOk);
+        $("modal-cancel").removeEventListener("click", onCancel);
+        modal.removeEventListener("click", onBackdrop);
+        document.removeEventListener("keydown", onKey);
+        resolve(answer);
+      };
+      const onOk = () => close(true);
+      const onCancel = () => close(false);
+      const onBackdrop = (event) => {
+        if (event.target === modal) close(false);
+      };
+      const onKey = (event) => {
+        if (event.key === "Escape") close(false);
+      };
+
+      $("modal-ok").addEventListener("click", onOk);
+      $("modal-cancel").addEventListener("click", onCancel);
+      modal.addEventListener("click", onBackdrop);
+      document.addEventListener("keydown", onKey);
+      $("modal-ok").focus();
+    });
+  }
+
   function renderPlayers(players) {
     const items = players.map((player) => {
       const li = document.createElement("li");
@@ -58,6 +92,8 @@
       current = null;
       $("game-view").hidden = true;
       $("lobby-view").hidden = false;
+      $("share-row").hidden = false;
+      document.querySelector(".container").classList.remove("wide");
       return;
     }
 
@@ -75,6 +111,8 @@
 
     $("lobby-view").hidden = true;
     $("game-view").hidden = false;
+    $("share-row").hidden = true;
+    document.querySelector(".container").classList.toggle("wide", game.type === "country");
     $("game-title").textContent = `${game.emoji} ${game.name}`;
     $("game-solved").hidden = !game.solved;
     impl.update(game.state);
@@ -113,12 +151,14 @@
     );
   });
 
-  $("back-to-lobby").addEventListener("click", () => {
-    if (confirm("Leave this game for everyone?")) send({ type: "end_game" });
+  $("back-to-lobby").addEventListener("click", async () => {
+    if (await confirmDialog("Leave this game for everyone?", "Leave")) {
+      send({ type: "end_game" });
+    }
   });
 
-  $("new-round").addEventListener("click", () => {
-    if (current && confirm("Start a new round for everyone?")) {
+  $("new-round").addEventListener("click", async () => {
+    if (current && (await confirmDialog("Start a new round for everyone?", "New round"))) {
       send({ type: "start_game", game_type: current.type });
     }
   });

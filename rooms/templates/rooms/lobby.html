@@ -12,7 +12,7 @@
     </div>
     <span id="connection-status" class="status status-connecting">Connecting…</span>
   </div>
-  <div class="share-row">
+  <div class="share-row" id="share-row">
     <input id="room-link" class="input" value="{{ share_url }}" readonly>
     <button id="copy-link" type="button" class="btn">Copy</button>
   </div>
@@ -46,6 +46,15 @@
 
 <p id="room-error" class="toast" hidden></p>
 
+<div id="modal" class="modal" hidden>
+  <div class="modal-card">
+    <p id="modal-text" class="modal-text"></p>
+    <div class="modal-actions">
+      <button type="button" id="modal-cancel" class="btn">Cancel</button>
+      <button type="button" id="modal-ok" class="btn btn-primary">Confirm</button>
+    </div>
+  </div>
+</div>
 {{ room_config|json_script:"room-config" }}
 {% endblock %}
 
