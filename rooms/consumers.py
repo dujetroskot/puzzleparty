@@ -81,16 +81,15 @@ class RoomConsumer(AsyncJsonWebsocketConsumer):
     # --- Slanje klijentima ---
 
     async def broadcast_state(self):
-        online = runtime.online_player_ids(self.code)
-        payload = await build_room_payload(self.code, online)
-        await self.channel_layer.group_send(
-            self.group_name, {"type": "room.state", "payload": payload}
-        )
+        # Šaljemo samo signal. Svaki consumer zatim sam sastavi
+        # poruku za svog igrača, jer igre smiju imati skrivene informacije.
+        await self.channel_layer.group_send(self.group_name, {"type": "room.changed"})
 
-    async def room_state(self, event):
-        # Channels poruku tipa "room.state" isporučuje ovoj metodi
-        # u SVAKOM consumeru iz grupe.
-        await self.send_json({"type": "state", **event["payload"]})
+    async def room_changed(self, event):
+        payload = await build_room_payload(
+            self.code, runtime.online_player_ids(self.code), self.player
+        )
+        await self.send_json({"type": "state", **payload})
 
     async def send_error(self, message):
         await self.send_json({"type": "error", "message": message})

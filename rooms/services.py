@@ -85,8 +85,8 @@ def apply_action(code, player, action):
         room.save(update_fields=["game_state", "updated_at"])
 
 
-def build_room_payload(code, online_player_ids):
-    """Sve što klijenti vide o sobi. Ovdje nikad ne ide puni game_state."""
+def build_room_payload(code, online_player_ids, viewer):
+    """Sve što JEDAN igrač vidi o sobi. Nikad ne vraća puni game_state."""
     room = Room.objects.get(code=code)
     players = room.players.filter(pk__in=online_player_ids).order_by("joined_at")
 
@@ -98,7 +98,7 @@ def build_room_payload(code, online_player_ids):
             "name": game.name,
             "emoji": game.emoji,
             "solved": game.is_solved(room.game_state),
-            "state": game.get_public_state(room.game_state),
+            "state": game.get_public_state(room.game_state, viewer),
         }
 
     return {

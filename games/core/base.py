@@ -25,9 +25,12 @@ class GameMode(ABC):
         """
 
     @abstractmethod
-    def get_public_state(self, state):
-        """Vrati SAMO ono što klijenti smiju vidjeti."""
+    def get_public_state(self, state, viewer):
+        """Vrati SAMO ono što ovaj igrač smije vidjeti.
 
+        viewer je dict {"id": ..., "nickname": ...}. Igre kod kojih svi vide
+        isto ga jednostavno ignoriraju.
+        """
     @abstractmethod
     def is_solved(self, state):
         """Je li zagonetka riješena."""

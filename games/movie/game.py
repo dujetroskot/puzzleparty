@@ -55,7 +55,7 @@ class MovieGame(GameMode):
     def is_solved(self, state):
         return state["solved"]
 
-    def get_public_state(self, state):
+    def get_public_state(self, state, viewer):
         public = {
             "guesses": state["guesses"],
             "solved": state["solved"],

@@ -27,7 +27,7 @@ class SharedCounterGame(GameMode):
     def is_solved(self, state):
         return state["count"] >= state["secret"]
 
-    def get_public_state(self, state):
+    def get_public_state(self, state, viewer):
         public = {"count": state["count"], "last_player": state["last_player"]}
         if self.is_solved(state):
             public["secret"] = state["secret"]
