@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "games.demo",
     "games.movie",
     "games.country",
+    "games.wavelength",
 ]
 
 MIDDLEWARE = [
