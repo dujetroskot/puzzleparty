@@ -4,7 +4,7 @@ Real-time multiplayer party games in the browser. Create a room, share the link,
 nickname and play. No accounts and no installs for players.
 
 <!-- Add a screenshot or short GIF of a game in progress: docs/screenshots/game.gif -->
-![Puzzle Party](docs/screenshots/game.gif)
+![Puzzle Party](docs/screenshots/game.png)
 
 ## Games
 
